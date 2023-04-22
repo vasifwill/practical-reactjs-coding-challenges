@@ -1,7 +1,6 @@
 import Slider from 'rc-slider'
 import 'rc-slider/assets/index.css'
-import { useState } from 'react'
-
+import { useState, useEffect } from 'react'
 import passwordGif from '../../assets/gif/password.gif'
 import { ReactComponent as Copy } from '../../assets/icons/copy.svg'
 import { ReactComponent as Refresh } from '../../assets/icons/refresh.svg'
@@ -9,11 +8,38 @@ import Checkbox from '../Checkbox'
 import './index.css'
 
 const PasswordGenerator = () => {
-  const [passwordLength, setPasswordLength] = useState<number>(8)
+  const [passwordLength, setPasswordLength] = useState(8)
+  const [password, setPassword] = useState('OFGSDFAW')
+  const [checkBox, setCheckBox] = useState([])
 
-  const onChangePasswordLength = (value: number | number[]) => {
-    setPasswordLength(value as number)
+  // const PasswordGenerator = () => {
+  //   let passwordSize = password.length
+  //   let upperCase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+  //   let lowerCase = 'abcdefghijklmnopqrstuvwxyz'
+  //   let Numbers = '0123456789'
+
+
+
+  // }
+
+  //taking password and checking it.
+  const checkPassword = (e) => {
+    let checkedPassword = e.target.value
+    setPassword(checkedPassword)
   }
+
+  const onChangePasswordLength = (value) => {
+    setPasswordLength(value)
+  }
+
+  const handleCheckBox = (e) => {
+    setCheckBox(prev => ({...prev, [e.target.name]: e.target.checked }))
+    console.log(checkBox)
+  }
+
+  // useEffect(() => {
+  //   handleCheckBox()
+  // },[])
 
   return (
     <div className="password-wrapper">
@@ -28,7 +54,7 @@ const PasswordGenerator = () => {
       </div>
       <div className="password-input-wrapper">
         <div className="password-field">
-          <input type="text" placeholder="your password" value="B9QI4PDBYY" />
+          <input type="text" placeholder="your password" value={password} onChange={checkPassword}/>
           <Refresh />
         </div>
         <button className="copy-btn">
@@ -50,15 +76,10 @@ const PasswordGenerator = () => {
         />
       </div>
       <div className="elements">
-        <Checkbox id="uppercase" label="Uppercase" checked={true} name="upper" />
-        <Checkbox id="lowercase" label="Lowercase" checked={false} name="lower" />
-        <Checkbox id="numbers" label="Numbers" checked={false} name="numbers" />
-        <Checkbox
-          id="special chars"
-          label="Special Characters"
-          checked={true}
-          name="specialChars"
-        />
+        <Checkbox id="uppercase"     label="Uppercase"           name="upper" handleCheckBox={handleCheckBox}/>
+        <Checkbox id="lowercase"     label="Lowercase"           name="lower" handleCheckBox={handleCheckBox } />
+        <Checkbox id="numbers"       label="Numbers"             name="numbers"  handleCheckBox={handleCheckBox }/>
+        <Checkbox id="special chars" label="Special Characters"  name="specialChars" handleCheckBox={handleCheckBox }/>
       </div>
     </div>
   )
