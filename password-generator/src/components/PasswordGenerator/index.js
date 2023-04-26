@@ -10,7 +10,7 @@ import './index.css'
 const PasswordGenerator = () => {
   const [passwordLength, setPasswordLength] = useState(8)
   const [password, setPassword] = useState('OFGSDFAW')
-  const [checkBox, setCheckBox] = useState([])
+  const [checks, setChecks] = useState([])
 
   // const PasswordGenerator = () => {
   //   let passwordSize = password.length
@@ -32,10 +32,27 @@ const PasswordGenerator = () => {
     setPasswordLength(value)
   }
 
-  const handleCheckBox = (e) => {
-    setCheckBox(prev => ({...prev, [e.target.name]: e.target.checked }))
-    console.log(checkBox)
+  
+  const handleCheckBox = (e) =>{
+    // e.preventDefault()
+    if (e.target.checked){
+      console.log(e.target.value)
+      console.log(e.target.name)
+      
+    // add into the list if not already
+    if (!checks.find((check) => check === e.target.value)) {
+    setChecks((prev) => [...prev, e.target.value])
+    console.log(checks)
+    }
+    } else {
+    // removes from the list if present already
+    const filtered = checks.filter((check) => check !== e.target.value)
+    setChecks((prev) => [...filtered])
+    }
+    
+    
   }
+  
 
   // useEffect(() => {
   //   handleCheckBox()
@@ -76,10 +93,10 @@ const PasswordGenerator = () => {
         />
       </div>
       <div className="elements">
-        <Checkbox id="uppercase"     label="Uppercase"           name="upper" handleCheckBox={handleCheckBox}/>
-        <Checkbox id="lowercase"     label="Lowercase"           name="lower" handleCheckBox={handleCheckBox } />
-        <Checkbox id="numbers"       label="Numbers"             name="numbers"  handleCheckBox={handleCheckBox }/>
-        <Checkbox id="special chars" label="Special Characters"  name="specialChars" handleCheckBox={handleCheckBox }/>
+        <Checkbox id="uppercase"     label="Uppercase"    name='upper'   value="upper"   handleCheckBox={handleCheckBox}/>
+        <Checkbox id="lowercase"     label="Lowercase"     name='lowercase'    value="lowercase"  handleCheckBox={handleCheckBox } />
+        <Checkbox id="numbers"       label="Numbers"         name="number"   value="number"   handleCheckBox={handleCheckBox }/>
+        <Checkbox id="special chars" label="Special Characters" name="specialChars" value="specialChars"   handleCheckBox={handleCheckBox }/>
       </div>
     </div>
   )
