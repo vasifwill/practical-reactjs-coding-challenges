@@ -11,18 +11,59 @@ const PasswordGenerator = () => {
   const [passwordLength, setPasswordLength] = useState(8)
   const [password, setPassword] = useState('OFGSDFAW')
   const [checks, setChecks] = useState([])
+  const[strength, setStrength] = useState('')
 
-  // const PasswordGenerator = () => {
-  //   let passwordSize = password.length
-  //   let upperCase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-  //   let lowerCase = 'abcdefghijklmnopqrstuvwxyz'
-  //   let Numbers = '0123456789'
+  const PasswordGenerator = () => {
+    let generatedPassword = []
+    let passwordSize = passwordLength
+    let upperCase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    let lowerCase = 'abcdefghijklmnopqrstuvwxyz'
+    let Numbers = '0123456789'
+    let specialChars = '!@#$%^&*()'
+//     upper
+// lowercase
+// number
+// specialChars
+   
+    if(checks){ 
+      for (let i = 0; i < passwordSize; i++) {
+        for(const element of checks){
+          let indexLetter = Math.floor(Math.random() *26)
+          let indexNumber = Math.floor(Math.random() *9)
+          let indexChar = Math.floor(Math.random() *10)
+          if(generatedPassword.length >= passwordSize ){
+             setPassword(generatedPassword.join('')) 
+             return
+          }
+          if(element === 'upper'){
+            generatedPassword.push(upperCase.charAt(indexLetter))
+          }
+          if(element === 'lowercase'){
+            generatedPassword.push(lowerCase.charAt(indexLetter))
+          }
+  
+          if(element === 'number'){
+            generatedPassword.push(Numbers.charAt(indexNumber))
+          }
+  
+          if(element === 'specialChars'){
+            generatedPassword.push(specialChars.charAt(indexChar))
+          }
 
+         
+        }
+        
+      }
 
+      
+    }
+
+  }
+
+  // const passwordStrengthlogic = () => {
 
   // }
 
-  //taking password and checking it.
   const checkPassword = (e) => {
     let checkedPassword = e.target.value
     setPassword(checkedPassword)
@@ -32,31 +73,32 @@ const PasswordGenerator = () => {
     setPasswordLength(value)
   }
 
+
+
+  // useEffect(() => {
+  //   console.log(test)
+  // },[test])
+
   
-  const handleCheckBox = (e) =>{
-    // e.preventDefault()
-    if (e.target.checked){
-      console.log(e.target.value)
-      console.log(e.target.name)
-      
-    // add into the list if not already
-    if (!checks.find((check) => check === e.target.value)) {
-    setChecks((prev) => [...prev, e.target.value])
-    console.log(checks)
-    }
+  
+
+  const handleCheckBox = (e) => {
+    if (e.target.checked) {
+      // add into the list if not already
+      if (!checks.find((check) => check === e.target.value)) {
+        setChecks((prev) => [...prev, e.target.value])
+      }
     } else {
-    // removes from the list if present already
-    const filtered = checks.filter((check) => check !== e.target.value)
-    setChecks((prev) => [...filtered])
+      // removes from the list if present already
+      const filtered = checks.filter((check) => check !== e.target.value)
+      setChecks((prev) => [...filtered])
     }
-    
-    
   }
   
 
-  // useEffect(() => {
-  //   handleCheckBox()
-  // },[])
+  useEffect(() => {
+    console.log(checks)
+  },[checks])
 
   return (
     <div className="password-wrapper">
@@ -71,14 +113,14 @@ const PasswordGenerator = () => {
       </div>
       <div className="password-input-wrapper">
         <div className="password-field">
-          <input type="text" placeholder="your password" value={password} onChange={checkPassword}/>
-          <Refresh />
+          <input type="text" placeholder="your password" value={password} onChange={checkPassword} />
+          <Refresh onClick={PasswordGenerator}/>
         </div>
         <button className="copy-btn">
           <Copy /> Copy
         </button>
       </div>
-      <span className="fw-500">Weak</span>
+      <span className="fw-500">{strength}</span>
       <div className="slider">
         <div>
           <label id="slider-label">Password Length: </label>
