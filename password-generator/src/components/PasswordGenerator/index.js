@@ -13,7 +13,8 @@ const PasswordGenerator = () => {
   const [checks, setChecks] = useState([])
   const[strength, setStrength] = useState('')
 
-  const PasswordGenerator = () => {
+  const Generator = () => {
+    passwordStrengthlogic()
     let generatedPassword = []
     let passwordSize = passwordLength
     let upperCase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -24,10 +25,21 @@ const PasswordGenerator = () => {
 // lowercase
 // number
 // specialChars
-   
-    if(checks){ 
+
+//if checks is empty.
+if(checks.length === 0){
+  for(let i = 0; i <passwordSize;i++){
+    let index = Math.floor(Math.random() *26)
+    generatedPassword.push(upperCase.charAt(index))
+  }
+  setPassword(generatedPassword.join(''))
+ 
+}
+     if(checks){ 
+      console.log(checks)
       for (let i = 0; i < passwordSize; i++) {
         for(const element of checks){
+          console.log(element)
           let indexLetter = Math.floor(Math.random() *26)
           let indexNumber = Math.floor(Math.random() *9)
           let indexChar = Math.floor(Math.random() *10)
@@ -49,39 +61,60 @@ const PasswordGenerator = () => {
           if(element === 'specialChars'){
             generatedPassword.push(specialChars.charAt(indexChar))
           }
-
-         
         }
         
       }
+
 
       
     }
 
   }
 
-  // const passwordStrengthlogic = () => {
 
-  // }
+//checking password strength
+  const passwordStrengthlogic = () => {
+    // Hard: password contains at least one uppercase, one lowercase, one number, and one special character
+//b. -----Medium: if one of the fields is missing in the password
+//c. ----Easy: if two of the fields are missing in the password
+    if(password.length < passwordLength){
+      setStrength('Too Short')
 
+    }
+
+    if(checks.length === 4){
+      setStrength('Hard')
+    }
+
+    if(checks.length === 3){
+      setStrength('Medium')
+    }
+
+    if(checks.length ===2){
+      setStrength('Easy')
+    }
+
+    
+  }
+
+  //Adding volue of password inputed
   const checkPassword = (e) => {
     let checkedPassword = e.target.value
     setPassword(checkedPassword)
   }
 
+  //checking password length
   const onChangePasswordLength = (value) => {
     setPasswordLength(value)
   }
 
 
 
-  // useEffect(() => {
-  //   console.log(test)
-  // },[test])
+
 
   
   
-
+//handling checkbox change
   const handleCheckBox = (e) => {
     if (e.target.checked) {
       // add into the list if not already
@@ -94,11 +127,6 @@ const PasswordGenerator = () => {
       setChecks((prev) => [...filtered])
     }
   }
-  
-
-  useEffect(() => {
-    console.log(checks)
-  },[checks])
 
   return (
     <div className="password-wrapper">
@@ -114,13 +142,13 @@ const PasswordGenerator = () => {
       <div className="password-input-wrapper">
         <div className="password-field">
           <input type="text" placeholder="your password" value={password} onChange={checkPassword} />
-          <Refresh onClick={PasswordGenerator}/>
+          <Refresh onClick={Generator}/>
         </div>
         <button className="copy-btn">
           <Copy /> Copy
         </button>
       </div>
-      <span className="fw-500">{strength}</span>
+      <span className="fw-500" >{strength}</span>
       <div className="slider">
         <div>
           <label id="slider-label">Password Length: </label>
