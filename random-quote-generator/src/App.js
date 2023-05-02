@@ -7,35 +7,44 @@ import { ReactComponent as Whatsapp } from "../src/assets/icons/whatsapp.svg"
 import "./App.css"
 import { useState, useEffect } from "react"
 
-
 function App() {
   const [items, setItmes] = useState([])
   const [button, setButton] = useState(false)
-  const [random, setRandom] = useState({word:'"I am not afraid of storms, for I am learning how to sail my ship."', author:"Louisa May Alcott"})
+  const [random, setRandom] = useState({})
+  const [prevIndex, setPrevIndex] = useState(0)
+  const [currentIndex, setCurrentIndex] = useState(0)
 
-
-  
-
-  const Forwards = async() =>{
+  const Forwards = () => {
     setButton(!button)
-    let index = Math.floor(Math.random()*19)
-    if(items){
-      setRandom({word:items[index], author:items[index]})
+    setPrevIndex(currentIndex)
+    let index = Math.floor(Math.random() * 19)
+    setCurrentIndex(index)
+    if (items) {
+      setRandom({ word: items[index].quote, author: items[index].author })
     }
-    
+  }
 
+  const backward = () => {
+    setRandom({
+      word: items[prevIndex].quote,
+      author: items[prevIndex].author,
+    })
   }
 
   useEffect(() => {
-    axios.get('db.json').then(e => setItmes(e.data.quotes))
-    
-  },[])
+    axios.get("db.json").then((e) => {
+      setRandom({
+        word: e.data.quotes[0].quote,
+        author: e.data.quotes[0].author,
+      })
+
+      setItmes(e.data.quotes)
+    })
+  }, []) // empty array means, no depency at all. This will execute only in the first rendering for component.
   // const Backwards = () =>{
 
   // }
 
-  
- 
   return (
     <>
       <header>
@@ -45,14 +54,13 @@ function App() {
         <div className="quotation-box ">
           <Quotation />
           <div className="quote">
-            
-           <p>{random.word}</p>
+            <p>{random.word}</p>
             <span>{random.author}</span>
           </div>
           <div className="bottom-navigation">
             <div>
-              <Button className={classnames("rotate cp")}  />
-              <Button className="cp"  onClick={Forwards}/>
+              <Button className={classnames("rotate cp")} onClick={backward} />
+              <Button className="cp" onClick={Forwards} />
             </div>
             <div className="share">
               <span>Share At:</span>
